@@ -1,5 +1,7 @@
 # RAG Pipeline with Hybrid Search Over Internal Docs
 
+![Demo](docs/demo.gif)
+
 Retrieval-Augmented Generation system with hybrid retrieval (dense embeddings + BM25 keyword search), reciprocal rank fusion, cross-encoder reranking, and grounded generation with citation verification and confidence scoring.
 
 **95.5% composite score on a 70-question golden eval** (93.6% correctness, 98.3% faithfulness, 93.7% citation accuracy) — see [docs/case_study.md](docs/case_study.md) for the full breakdown, hybrid-vs-dense-only measurement, and chunking strategy comparison. Demo script: [docs/demo_script.md](docs/demo_script.md).
