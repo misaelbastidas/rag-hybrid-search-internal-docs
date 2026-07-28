@@ -1,0 +1,37 @@
+services:
+  chroma:
+    image: chromadb/chroma:latest
+    volumes:
+      - chroma_data:/chroma/chroma
+    ports:
+      - "8001:8000"
+
+  api:
+    build: .
+    depends_on:
+      - chroma
+    environment:
+      CHROMA_HOST: chroma
+      CHROMA_PORT: "8000"
+      AUTO_SEED: "true"
+      AUTO_SEED_DIR: data/raw
+    env_file:
+      - .env
+    volumes:
+      - bm25_data:/app/data/processed
+    ports:
+      - "8000:8000"
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        VITE_API_URL: http://localhost:8000
+    depends_on:
+      - api
+    ports:
+      - "5173:4173"
+
+volumes:
+  chroma_data:
+  bm25_data:

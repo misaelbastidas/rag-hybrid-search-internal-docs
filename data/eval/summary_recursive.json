@@ -1,0 +1,42 @@
+{
+  "overall": {
+    "n": 70,
+    "correctness": 0.9357142857142857,
+    "faithfulness": 0.9828571428571428,
+    "retrieval_relevance": 0.9,
+    "citation_accuracy": 0.9369047619047618,
+    "composite": 0.9548214285714286
+  },
+  "lookup": {
+    "n": 37,
+    "correctness": 0.9202702702702702,
+    "faithfulness": 1.0,
+    "retrieval_relevance": 0.972972972972973,
+    "citation_accuracy": 0.9031531531531531,
+    "composite": 0.9481756756756757
+  },
+  "multi_hop": {
+    "n": 20,
+    "correctness": 0.9425000000000001,
+    "faithfulness": 0.9400000000000001,
+    "retrieval_relevance": 0.975,
+    "citation_accuracy": 0.9583333333333334,
+    "composite": 0.95075
+  },
+  "ambiguous": {
+    "n": 8,
+    "correctness": 0.95,
+    "faithfulness": 1.0,
+    "retrieval_relevance": 0.9375,
+    "citation_accuracy": 1.0,
+    "composite": 0.9675
+  },
+  "no_answer": {
+    "n": 5,
+    "correctness": 1.0,
+    "faithfulness": 1.0,
+    "retrieval_relevance": 0.0,
+    "citation_accuracy": 1.0,
+    "composite": 1.0
+  }
+}

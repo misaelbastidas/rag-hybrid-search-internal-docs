@@ -1,0 +1,14 @@
+.env
+.git
+__pycache__/
+*.pyc
+.venv/
+venv/
+data/processed/
+data/eval/
+frontend/node_modules/
+frontend/dist/
+tests/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/

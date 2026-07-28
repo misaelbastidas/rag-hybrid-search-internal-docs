@@ -1,0 +1,28 @@
+__pycache__/
+*.pyc
+.venv/
+venv/
+.env
+
+data/processed/
+*.chroma/
+chroma_data/
+
+# Full 100-doc corpus stays local; keep a small sample so the repo/Docker demo still works out of the box.
+data/raw/*.pdf
+!data/raw/POL-RH-011.pdf
+!data/raw/POL-AC-004.pdf
+!data/raw/POL-AC-002.pdf
+!data/raw/POL-LC-010.pdf
+!data/raw/POL-SA-001.pdf
+
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+.vscode/
+.idea/
+.claude/
+
+# Node (frontend has its own .gitignore too, this covers root-level tooling)
+node_modules/
