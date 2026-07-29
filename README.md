@@ -6,8 +6,6 @@ Retrieval-Augmented Generation system with hybrid retrieval (dense embeddings + 
 
 **95.5% composite score on a 70-question golden eval** (93.6% correctness, 98.3% faithfulness, 93.7% citation accuracy) — see [docs/case_study.md](docs/case_study.md) for the full breakdown, hybrid-vs-dense-only measurement, and chunking strategy comparison. Demo script: [docs/demo_script.md](docs/demo_script.md).
 
-*[docs/resume_bullets.md](docs/resume_bullets.md) — resume bullets and a LinkedIn write-up drawn from the numbers above.*
-
 See [CLAUDE.md](CLAUDE.md) for the full architecture and build plan.
 
 ## Setup

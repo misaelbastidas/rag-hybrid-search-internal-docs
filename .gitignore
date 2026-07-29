@@ -24,5 +24,8 @@ data/raw/*.pdf
 .idea/
 .claude/
 
+# Personal material, not meant to be public
+docs/resume_bullets.md
+
 # Node (frontend has its own .gitignore too, this covers root-level tooling)
 node_modules/
