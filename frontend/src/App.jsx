@@ -4,9 +4,9 @@ import './App.css'
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
 const EXAMPLE_QUESTIONS = [
-  '¿Cuántos días de vacaciones tengo con 1 año de antigüedad?',
-  '¿Hay un programa de lealtad para clientes?',
-  '¿Cuánto tiempo toma resolver una queja de un cliente?',
+  'How many vacation days do I get with 1 year of tenure?',
+  'Is there a loyalty program for customers?',
+  'How long does it take to resolve a customer complaint?',
 ]
 
 function sourceLabel(source) {

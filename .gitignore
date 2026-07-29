@@ -26,6 +26,7 @@ data/raw/*.pdf
 
 # Personal material, not meant to be public
 docs/resume_bullets.md
+docs/architecture.drawio
 
 # Node (frontend has its own .gitignore too, this covers root-level tooling)
 node_modules/

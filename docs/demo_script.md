@@ -19,8 +19,8 @@ Show `python scripts/cli.py ingest data/raw` output (or the auto-seed log from `
 
 ## 1:00–2:15 — Ask varying difficulty (75s)
 
-**Simple lookup** (Spanish):
-> "¿Cuántos días de vacaciones tengo con 1 año de antigüedad en México?"
+**Simple lookup**:
+> "How many vacation days do I get with 1 year of tenure in Mexico?"
 
 Point out: cited answer (`[2]`), confidence badges, expandable sources.
 
@@ -30,7 +30,7 @@ Point out: cited answer (`[2]`), confidence badges, expandable sources.
 Point out: answers in English even though the source documents are Spanish — the model reads the retrieved Spanish text and answers in the query's language automatically.
 
 **Ambiguous**:
-> "¿Cuánto tiempo tiene Naguara58 para resolver la queja de un cliente?"
+> "How long does Naguara58 have to resolve a customer complaint?"
 
 Point out: the answer correctly explains the SLA *depends on complaint category* (4h/24h/48h) rather than picking one number arbitrarily — the golden eval dataset specifically tests this pattern.
 
@@ -39,7 +39,7 @@ Point out: the answer correctly explains the SLA *depends on complaint category*
 > "One of the harder things to get right: knowing when *not* to answer."
 
 Ask something plausible-sounding but not in the corpus:
-> "¿Cuál es el procedimiento de aprobación de fusiones y adquisiciones de Naguara58?"
+> "What is Naguara58's approval procedure for mergers and acquisitions?"
 
 Point out: retrieval finds a *topically related* document (corporate governance), high confidence — but the answer explicitly states the specific fact isn't covered, rather than fabricating a plausible-sounding procedure. This is verified automatically in the eval suite via an LLM-judge that checks whether declines are "honest" vs "fabricated."
 
