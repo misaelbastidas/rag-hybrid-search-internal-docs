@@ -1,13 +1,14 @@
 import os
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 
 from generation.rag_pipeline import RAGPipeline
 from ingestion.pipeline import ingest_directory
 from ingestion.vector_store import VectorStore
 
+from .rate_limit import rate_limiter
 from .schemas import (
     AskRequest,
     AskResponse,
@@ -51,11 +52,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Every /v1/ask call fires several paid LLM/embedding calls, so a public deployment
+# needs per-IP limits to avoid one bot or over-enthusiastic visitor running up a real bill.
 
-@app.post("/v1/ask", response_model=AskResponse)
-def ask(request: AskRequest) -> AskResponse:
+
+@app.post("/v1/ask", response_model=AskResponse, dependencies=[Depends(rate_limiter(10, 60))])
+def ask(payload: AskRequest) -> AskResponse:
     pipeline: RAGPipeline = state["pipeline"]
-    result = pipeline.ask(request.question, candidate_k=request.candidate_k, top_k=request.top_k)
+    result = pipeline.ask(payload.question, candidate_k=payload.candidate_k, top_k=payload.top_k)
 
     return AskResponse(
         query=result.query,
@@ -87,22 +91,22 @@ def ask(request: AskRequest) -> AskResponse:
     )
 
 
-@app.get("/v1/documents", response_model=list[DocumentInfo])
+@app.get("/v1/documents", response_model=list[DocumentInfo], dependencies=[Depends(rate_limiter(30, 60))])
 def list_documents() -> list[DocumentInfo]:
     vector_store: VectorStore = state["vector_store"]
     return [DocumentInfo(**doc) for doc in vector_store.list_documents()]
 
 
-@app.post("/v1/ingest", response_model=IngestResponse)
-def ingest(request: IngestRequest) -> IngestResponse:
+@app.post("/v1/ingest", response_model=IngestResponse, dependencies=[Depends(rate_limiter(2, 3600))])
+def ingest(payload: IngestRequest) -> IngestResponse:
     chunker_kwargs = {}
-    if request.chunk_size is not None:
-        chunker_kwargs["chunk_size"] = request.chunk_size
-    if request.chunk_overlap is not None:
-        chunker_kwargs["chunk_overlap"] = request.chunk_overlap
+    if payload.chunk_size is not None:
+        chunker_kwargs["chunk_size"] = payload.chunk_size
+    if payload.chunk_overlap is not None:
+        chunker_kwargs["chunk_overlap"] = payload.chunk_overlap
 
     try:
-        result = ingest_directory(request.dir, strategy=request.strategy, chunker_kwargs=chunker_kwargs or None)
+        result = ingest_directory(payload.dir, strategy=payload.strategy, chunker_kwargs=chunker_kwargs or None)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 
