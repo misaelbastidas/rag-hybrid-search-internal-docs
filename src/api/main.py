@@ -8,6 +8,7 @@ from generation.rag_pipeline import RAGPipeline
 from ingestion.pipeline import ingest_directory
 from ingestion.vector_store import VectorStore
 
+from .auth import require_admin_key
 from .rate_limit import rate_limiter
 from .schemas import (
     AskRequest,
@@ -97,7 +98,11 @@ def list_documents() -> list[DocumentInfo]:
     return [DocumentInfo(**doc) for doc in vector_store.list_documents()]
 
 
-@app.post("/v1/ingest", response_model=IngestResponse, dependencies=[Depends(rate_limiter(2, 3600))])
+@app.post(
+    "/v1/ingest",
+    response_model=IngestResponse,
+    dependencies=[Depends(require_admin_key), Depends(rate_limiter(2, 3600))],
+)
 def ingest(payload: IngestRequest) -> IngestResponse:
     chunker_kwargs = {}
     if payload.chunk_size is not None:
