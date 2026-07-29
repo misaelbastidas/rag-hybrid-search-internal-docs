@@ -3,6 +3,12 @@ import './App.css'
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000'
 
+const EXAMPLE_QUESTIONS = [
+  '¿Cuántos días de vacaciones tengo con 1 año de antigüedad?',
+  '¿Hay un programa de lealtad para clientes?',
+  '¿Cuánto tiempo toma resolver una queja de un cliente?',
+]
+
 function sourceLabel(source) {
   const location = source.section_heading || (source.page_num ? `page ${source.page_num}` : '')
   return location ? `${source.source_path} (${location})` : source.source_path
@@ -56,6 +62,14 @@ function ConfidenceBadges({ confidence }) {
   )
 }
 
+function Avatar() {
+  return (
+    <div className="avatar" aria-hidden="true">
+      N58
+    </div>
+  )
+}
+
 function Message({ message }) {
   if (message.role === 'user') {
     return (
@@ -68,6 +82,7 @@ function Message({ message }) {
   if (message.loading) {
     return (
       <div className="message message-assistant">
+        <Avatar />
         <div className="bubble bubble-assistant bubble-loading">
           <span className="dot" />
           <span className="dot" />
@@ -80,6 +95,7 @@ function Message({ message }) {
   if (message.error) {
     return (
       <div className="message message-assistant">
+        <Avatar />
         <div className="bubble bubble-assistant bubble-error">{message.error}</div>
       </div>
     )
@@ -88,17 +104,23 @@ function Message({ message }) {
   if (!message.answered) {
     return (
       <div className="message message-assistant">
-        <div className="bubble bubble-assistant bubble-declined">{message.declineMessage}</div>
-        <SourcesPanel sources={message.sources} />
+        <Avatar />
+        <div className="message-body">
+          <div className="bubble bubble-assistant bubble-declined">{message.declineMessage}</div>
+          <SourcesPanel sources={message.sources} />
+        </div>
       </div>
     )
   }
 
   return (
     <div className="message message-assistant">
-      <div className="bubble bubble-assistant">{message.content}</div>
-      <ConfidenceBadges confidence={message.confidence} />
-      <SourcesPanel sources={message.sources} />
+      <Avatar />
+      <div className="message-body">
+        <div className="bubble bubble-assistant">{message.content}</div>
+        <ConfidenceBadges confidence={message.confidence} />
+        <SourcesPanel sources={message.sources} />
+      </div>
     </div>
   )
 }
@@ -113,9 +135,7 @@ export default function App() {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
-  async function sendMessage(e) {
-    e.preventDefault()
-    const question = input.trim()
+  async function sendQuestion(question) {
     if (!question || sending) return
 
     const userMessage = { id: crypto.randomUUID(), role: 'user', content: question }
@@ -161,16 +181,38 @@ export default function App() {
     }
   }
 
+  function handleSubmit(e) {
+    e.preventDefault()
+    sendQuestion(input.trim())
+  }
+
   return (
     <div className="app">
       <header className="app-header">
-        <h1>RAG Pipeline · Hybrid Search</h1>
-        <p>Ask questions about the indexed internal documents.</p>
+        <div className="brand">
+          <div className="brand-mark" aria-hidden="true">
+            N58
+          </div>
+          <div>
+            <h1>Naguara58 Assistant</h1>
+            <p>Ask about company policies — HR, finance, operations, and more.</p>
+          </div>
+        </div>
       </header>
 
       <main className="chat">
         {messages.length === 0 && (
-          <div className="empty-state">Ask a question to get started.</div>
+          <div className="empty-state">
+            <p className="empty-state-title">How can I help?</p>
+            <p className="empty-state-hint">Ask in English or Spanish — try one of these:</p>
+            <div className="example-chips">
+              {EXAMPLE_QUESTIONS.map((q) => (
+                <button key={q} className="chip" onClick={() => sendQuestion(q)} disabled={sending}>
+                  {q}
+                </button>
+              ))}
+            </div>
+          </div>
         )}
         {messages.map((m) => (
           <Message key={m.id} message={m} />
@@ -178,7 +220,7 @@ export default function App() {
         <div ref={bottomRef} />
       </main>
 
-      <form className="composer" onSubmit={sendMessage}>
+      <form className="composer" onSubmit={handleSubmit}>
         <input
           type="text"
           value={input}
