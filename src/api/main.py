@@ -111,7 +111,12 @@ def ingest(payload: IngestRequest) -> IngestResponse:
         chunker_kwargs["chunk_overlap"] = payload.chunk_overlap
 
     try:
-        result = ingest_directory(payload.dir, strategy=payload.strategy, chunker_kwargs=chunker_kwargs or None)
+        result = ingest_directory(
+            payload.dir,
+            strategy=payload.strategy,
+            chunker_kwargs=chunker_kwargs or None,
+            dedup_threshold=payload.dedup_threshold,
+        )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

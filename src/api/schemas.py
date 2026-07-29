@@ -45,6 +45,7 @@ class IngestRequest(BaseModel):
     strategy: str = "recursive"
     chunk_size: int | None = None
     chunk_overlap: int | None = None
+    dedup_threshold: float = 0.95
 
 
 class IngestResponse(BaseModel):
